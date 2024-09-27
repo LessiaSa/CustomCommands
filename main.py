@@ -9,34 +9,34 @@ directories = {
     '3': []
 }
 
-#проверка существования документа
-def check_document_number(user_doc_number):
-    doc_founded = False
-    for document in documents:
-        doc_number = document["number"]  #завожу переменную для хранения существующего номера документа
-        if doc_number == user_doc_number:
-            doc_founded = True
-            break
-    return doc_founded
-
-#проверка существования полки
-def check_shelf_number(user_shelf_number):
-    shelf_founded = False
-    for directory in directories:
-        shelf_number = directory[0]
-        if shelf_number == user_shelf_number:
-            shelf_founded = True
-            break
-    return shelf_founded
-
-#удалить документ с полки
-def remove_doc_from_shelf(user_doc_number):
-    for directory_number, directory_docs_list in directories.items():
-        if user_doc_number in directory_docs_list:
-            directory_docs_list.remove(user_doc_number)
-
-
-
+# #проверка существования документа
+# def check_document_number(user_doc_number):
+#     doc_founded = False
+#     for document in documents:
+#         doc_number = document["number"]  #завожу переменную для хранения существующего номера документа
+#         if doc_number == user_doc_number:
+#             doc_founded = True
+#             break
+#     return doc_founded
+#
+# #проверка существования полки
+# def check_shelf_number(user_shelf_number):
+#     shelf_founded = False
+#     for directory in directories:
+#         shelf_number = directory[0]
+#         if shelf_number == user_shelf_number:
+#             shelf_founded = True
+#             break
+#     return shelf_founded
+#
+# #удалить документ с полки
+# def remove_doc_from_shelf(user_doc_number):
+#     for directory_number, directory_docs_list in directories.items():
+#         if user_doc_number in directory_docs_list:
+#             directory_docs_list.remove(user_doc_number)
+#
+#
+#
 
 
 
@@ -130,7 +130,83 @@ def remove_doc_from_shelf(user_doc_number):
 #     print(directories)
 # moving_document_to_another_shelf()
 
+#main()
 
+def get_name_by_number():
+    number = input('Введите номер документа: ')
+    for doc in documents:
+        if doc['number'] == number:
+            print('{0}'.format(doc['name']))
+            break
+    else:
+        print('Отсутствуют документы с таким номером')
+
+
+def show_documents():
+    for doc in documents:
+        print(doc['type'], doc['number'], doc['name'])
+    for key, values in directories.items():
+        print(key, '->', values)
+
+
+def get_directory_by_number():
+    number = input('Введите номер документа: ')
+    for directory, list_docs in directories.items():
+        if number in list_docs:
+            print('Документ с номером {0} находится на полке {1}'.format(number, directory))
+            break
+    else:
+        print('Отсутствуют документы с таким номером')
+
+
+def add_document():
+    number = input('Введите номер документа:')
+    name = input('Введите имя и фамилию:')
+    doc_type = input('Введите тип документа:')
+    directory_number = input('Введите номер полки:')
+    if number and name and doc_type and directory_number:
+        documents.append({"type": doc_type, "number": number, "name": name})
+        if directory_number in directories:
+            directories[directory_number].append(number)
+        else:
+            directories[directory_number] = [number]
+    else:
+        print('ВНИМАНИЕ! Введены не все данные')
+
+
+def remove_document():
+    person_number = input('Введите номер документа: ')
+    bookshelf = ''
+    for elem in documents:
+        if elem['number'] == person_number:
+            documents.remove(elem)
+    for number_shelf, number_documents in directories.items():
+        if person_number in number_documents:
+            number_documents.remove(person_number)
+            bookshelf = number_shelf
+            break
+    print(f'Удален документ с номером: {person_number} из базы данных и убран с полки №{bookshelf}')
+
+
+def main():
+    while True:
+        command = input('Введите команду: ')
+        if command == 'p':
+            get_name_by_number()
+        elif command == 'l':
+            show_documents()
+        elif command == 's':
+            get_directory_by_number()
+        elif command == 'a':
+            add_document()
+        elif command == 'd':
+            remove_document()
+            print(documents)
+            print(directories)
+        elif command == 'e':
+            break
+
+main()
 
 
 
